@@ -22,7 +22,9 @@ right_handle = GPIO.PWM(right_servo_pin, 50)
 right_handle.start(50)
 
 def pitch_control():
+	K_p, K_i, K_d = 1, 0, 0
 	oldPitch = 0
+	accumulator = 0
 	leftServoPWM = 50
 	rightServoPWM = 50
 
@@ -31,12 +33,24 @@ def pitch_control():
 		currentPitch = socket.recv()
 		print('pitch: ', currentPitch)
 
-		if (pitch < 0):
-			leftServoPWM -= 0.01
-			rightServoPWM -= 0.01
-		if (pitch > 0):
-			leftServoPWM += 0.01
-			rightServoPWM += 0.01
+		accumulator += currentPitch
+		leftServoPWM = K_p * currentPitch + K_i * accumulator + K_d * - (currentPitch - oldPitch)
+		rightServoPWM = K_p * currentPitch + K_i * accumulator + K_d * - (currentPitch - oldPitch)
+
+		if leftServoPWM > 100:
+			leftServoPWM = 100
+			accumulator -= currentPitch
+		if leftServoPWM < 0:
+			leftServoPWM = 0
+			accumulator -= currentPitch
+
+		# lame (but probably better) approach 
+		# if (currentPitch < 0):
+		# 	leftServoPWM -= 0.01
+		# 	rightServoPWM -= 0.01
+		# if (currentPitch > 0):
+		# 	leftServoPWM += 0.01
+		# 	rightServoPWM += 0.01
 
 		left_handle.ChangeDutyCycle(leftServoPWM)
 		right_handle.ChangeDutyCycle(rightServoPWM)
@@ -50,7 +64,7 @@ if __name__ == '__main__':
 		pitch_control()
 	except (KeyboardInterrupt, SystemExit) as exErr:
 		print("\nFinishing")
-		
+
 		left_handle.stop()
         right_handle.stop()
         GPIO.cleanup()
