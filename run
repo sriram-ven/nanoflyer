@@ -1,0 +1,7 @@
+#!/usr//bin/bash
+
+python getPitch.py&
+
+python control.py&
+
+python motortest.py&

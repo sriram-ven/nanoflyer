@@ -44,7 +44,7 @@ def pitch_control():
 			leftServoPWM = 0
 			accumulator -= currentPitch
 
-		# lame (but probably better) approach 
+		# lame (but potentially better) approach 
 		# if (currentPitch < 0):
 		# 	leftServoPWM -= 0.01
 		# 	rightServoPWM -= 0.01
