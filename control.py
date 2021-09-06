@@ -21,8 +21,7 @@ left_handle.start(50)
 right_handle = GPIO.PWM(right_servo_pin, 50)
 right_handle.start(50)
 
-def pitch_control():
-	K_p, K_i, K_d = 1, 0, 0
+def pitch_control(K_p = 1, K_i = 0, K_d = 0):
 	oldPitch = 0
 	accumulator = 0
 	leftServoPWM = 50
@@ -61,7 +60,7 @@ def pitch_control():
 
 if __name__ == '__main__':
 	try:
-		pitch_control()
+		pitch_control(sys.argv[1], sys.argv[2], sys.argv[3])
 	except (KeyboardInterrupt, SystemExit) as exErr:
 		print("\nFinishing")
 

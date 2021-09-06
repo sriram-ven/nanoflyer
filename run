@@ -1,7 +1,16 @@
-#!/usr//bin/bash
+#!/usr/bin/bash
 
-python getPitch.py&
+echo "Enter K_p: "
+read K_p
 
-python control.py&
+echo "Enter K_i: "
+read K_i
 
-python motortest.py&
+echo "Enter K_d: "
+read K_d
+
+python getPitch.py &
+
+python control.py ${K_p} ${K_i} ${K_d} &
+
+python motortest.py &
